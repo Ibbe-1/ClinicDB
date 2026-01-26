@@ -16,4 +16,6 @@ public partial class Patienter
     public string? PhoneNumber { get; set; }
 
     public DateTime? CreatedAt { get; set; }
+
+    public virtual ICollection<Bokningar> Bokningars { get; set; } = new List<Bokningar>();
 }
