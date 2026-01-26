@@ -15,21 +15,43 @@ public partial class ClinicDbContext : DbContext
     {
     }
 
+    public virtual DbSet<Bokningar> Bokningars { get; set; }
+
     public virtual DbSet<Patienter> Patienters { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=localhost\\SQLEXPRESS;Database=ClinicDB;Trusted_Connection=True;TrustServerCertificate=True;");
+        => optionsBuilder.UseSqlServer("Server=.\\SQLEXPRESS;Database=ClinicDB;Trusted_Connection=True;TrustServerCertificate=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<Bokningar>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Bokninga__3214EC07473288DB");
+
+            entity.ToTable("Bokningar");
+
+            entity.Property(e => e.Skapad)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+            entity.Property(e => e.StartTid).HasColumnType("datetime");
+            entity.Property(e => e.Status)
+                .HasMaxLength(20)
+                .HasDefaultValue("Bokad");
+
+            entity.HasOne(d => d.Patient).WithMany(p => p.Bokningars)
+                .HasForeignKey(d => d.PatientId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Bokningar_Patienter");
+        });
+
         modelBuilder.Entity<Patienter>(entity =>
         {
-            entity.HasKey(e => e.PatientId).HasName("PK__Patiente__970EC346E8198BAB");
+            entity.HasKey(e => e.PatientId).HasName("PK__Patiente__970EC3462EE4DB0B");
 
             entity.ToTable("Patienter");
 
-            entity.HasIndex(e => e.WaitingNumber, "UQ__Patiente__D021E8C67CFC560D").IsUnique();
+            entity.HasIndex(e => e.WaitingNumber, "UQ__Patiente__D021E8C687A43A8E").IsUnique();
 
             entity.Property(e => e.PatientId).HasColumnName("PatientID");
             entity.Property(e => e.CreatedAt)
