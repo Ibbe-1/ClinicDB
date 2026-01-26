@@ -19,15 +19,17 @@ public partial class ClinicDbContext : DbContext
 
     public virtual DbSet<Patienter> Patienters { get; set; }
 
+    public virtual DbSet<Personal> Personals { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=.\\SQLEXPRESS;Database=ClinicDB;Trusted_Connection=True;TrustServerCertificate=True;");
+        => optionsBuilder.UseSqlServer("Server=YONIS\\SQLEXPRESS03;Database=ClinicDB;Trusted_Connection=True;TrustServerCertificate=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Bokningar>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Bokninga__3214EC07473288DB");
+            entity.HasKey(e => e.Id).HasName("PK__Bokninga__3214EC0796B8826E");
 
             entity.ToTable("Bokningar");
 
@@ -43,15 +45,20 @@ public partial class ClinicDbContext : DbContext
                 .HasForeignKey(d => d.PatientId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Bokningar_Patienter");
+
+            entity.HasOne(d => d.Personal).WithMany(p => p.Bokningars)
+                .HasForeignKey(d => d.PersonalId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Bokningar_Personal");
         });
 
         modelBuilder.Entity<Patienter>(entity =>
         {
-            entity.HasKey(e => e.PatientId).HasName("PK__Patiente__970EC3462EE4DB0B");
+            entity.HasKey(e => e.PatientId).HasName("PK__Patiente__970EC346BD8F04CB");
 
             entity.ToTable("Patienter");
 
-            entity.HasIndex(e => e.WaitingNumber, "UQ__Patiente__D021E8C687A43A8E").IsUnique();
+            entity.HasIndex(e => e.WaitingNumber, "UQ__Patiente__D021E8C6CB769ADD").IsUnique();
 
             entity.Property(e => e.PatientId).HasColumnName("PatientID");
             entity.Property(e => e.CreatedAt)
@@ -66,6 +73,27 @@ public partial class ClinicDbContext : DbContext
             entity.Property(e => e.PhoneNumber)
                 .HasMaxLength(20)
                 .IsUnicode(false);
+        });
+
+        modelBuilder.Entity<Personal>(entity =>
+        {
+            entity.HasKey(e => e.PersonalId).HasName("PK__Personal__C16BAC15B4B08766");
+
+            entity.ToTable("Personal");
+
+            entity.Property(e => e.PersonalId).HasColumnName("personal_id");
+            entity.Property(e => e.Namn)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("namn");
+            entity.Property(e => e.Telefonnummer)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("telefonnummer");
+            entity.Property(e => e.Yrke)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("yrke");
         });
 
         OnModelCreatingPartial(modelBuilder);
