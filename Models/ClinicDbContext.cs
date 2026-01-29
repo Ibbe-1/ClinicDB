@@ -18,8 +18,9 @@ public partial class ClinicDbContext : DbContext
     public virtual DbSet<Bokningar> Bokningars { get; set; }
     public virtual DbSet<Patienter> Patienters { get; set; }
     public virtual DbSet<Personal> Personals { get; set; }
-    public virtual DbSet<Betalning> Betalnings { get; set; }   
+    public virtual DbSet<Betalning> Betalnings { get; set; }
 
+   public virtual DbSet<KonummerSekven> KonummerSekvens { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
@@ -27,6 +28,16 @@ public partial class ClinicDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<KonummerSekven>(entity =>
+        {
+            entity.HasKey(e => new { e.MottagningId, e.Datum }); // Sammansatt PK
+            entity.ToTable("KonummerSekven");
+
+            entity.Property(e => e.SistaKonummer)
+                  .IsRequired(); // NOT NULL
+        });
+
+
         modelBuilder.Entity<Betalning>(entity =>
         {
             entity.HasKey(e => e.BetalningId);   // Primärnyckel
