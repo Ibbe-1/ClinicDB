@@ -18,4 +18,7 @@ public partial class Patienter
     public DateTime? CreatedAt { get; set; }
 
     public virtual ICollection<Bokningar> Bokningars { get; set; } = new List<Bokningar>();
+
+    public virtual ICollection<Betalning> Betalnings { get; set; } = new List<Betalning>();
+
 }
