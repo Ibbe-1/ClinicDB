@@ -16,10 +16,10 @@ public partial class ClinicDbContext : DbContext
     }
 
     public virtual DbSet<Bokningar> Bokningars { get; set; }
-
     public virtual DbSet<Patienter> Patienters { get; set; }
-
     public virtual DbSet<Personal> Personals { get; set; }
+    public virtual DbSet<Betalning> Betalnings { get; set; }   
+
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
@@ -27,6 +27,34 @@ public partial class ClinicDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<Betalning>(entity =>
+        {
+            entity.HasKey(e => e.BetalningId);   // Primärnyckel
+
+            entity.ToTable("Betalning");
+
+            entity.Property(e => e.BetalningId).HasColumnName("BetalningID");
+            entity.Property(e => e.PatientId).IsRequired();
+            entity.Property(e => e.Belopp).HasColumnType("decimal(10,2)");
+            entity.Property(e => e.Betalningsdatum)
+                  .HasColumnType("datetime")
+                  .HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.Betalningssatt)
+                  .HasMaxLength(50)
+                  .IsUnicode(false);
+            entity.Property(e => e.Betalningsstatus)
+                  .HasMaxLength(30)
+                  .IsUnicode(false)
+                  .HasDefaultValue("Obetald");
+
+            // Koppla till Patienter
+            entity.HasOne(d => d.Patient)
+                  .WithMany(p => p.Betalnings)
+                  .HasForeignKey(d => d.PatientId)
+                  .OnDelete(DeleteBehavior.ClientSetNull)
+                  .HasConstraintName("FK_Betalning_Patienter");
+        });
+
         modelBuilder.Entity<Bokningar>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__Bokninga__3214EC0796B8826E");
