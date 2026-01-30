@@ -7,18 +7,15 @@ public partial class Patienter
 {
     public int PatientId { get; set; }
 
-    public string FirstName { get; set; } = null!;
+    public string Förnamn { get; set; } = null!;
 
-    public string LastName { get; set; } = null!;
+    public string Efternamn { get; set; } = null!;
 
-    public int WaitingNumber { get; set; }
+    public string? Telefonnummer { get; set; }
 
-    public string? PhoneNumber { get; set; }
-
-    public DateTime? CreatedAt { get; set; }
-
-    public virtual ICollection<Bokningar> Bokningars { get; set; } = new List<Bokningar>();
+    public DateTime? Skapad { get; set; }
 
     public virtual ICollection<Betalning> Betalnings { get; set; } = new List<Betalning>();
 
+    public virtual ICollection<Bokningar> Bokningars { get; set; } = new List<Bokningar>();
 }

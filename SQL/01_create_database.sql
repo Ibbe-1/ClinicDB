@@ -1,0 +1,5 @@
+CREATE DATABASE ClinicDB;
+GO
+
+USE ClinicDB;
+GO

@@ -17,9 +17,7 @@ public partial class Bokningar
 
     public string Status { get; set; } = null!;
 
-    public int? Betyg { get; set; }
-
-    public DateTime Skapad { get; set; }
+    public DateTime? Skapad { get; set; }
 
     public virtual Patienter Patient { get; set; } = null!;
 
