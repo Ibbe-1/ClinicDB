@@ -38,21 +38,24 @@ CREATE TABLE dbo.RecipeRatings (
 USE ClinicDB;
 GO
 
+USE ClinicDB;
+GO
+
 CREATE TABLE dbo.Prescriptions (
     PrescriptionId INT IDENTITY(1,1)
         CONSTRAINT PK_Prescriptions PRIMARY KEY,
 
-    PatientName NVARCHAR(100) NOT NULL,
-    MedicationName NVARCHAR(120) NOT NULL,
-
-    Dosage NVARCHAR(50) NOT NULL,       -- t.ex. "1 tablett"
-    Frequency NVARCHAR(50) NOT NULL,    -- t.ex. "2 gånger per dag"
-    Days INT NOT NULL
-        CONSTRAINT CK_Prescriptions_Days CHECK (Days > 0),
-
-    Status CHAR(2) NOT NULL
-        CONSTRAINT CK_Prescriptions_Status CHECK (Status IN ('IG','G')),
+    PersonalId INT NOT NULL,   -- läkaren/sjuksköterskan
 
     IssuedAt DATETIME2 NOT NULL
-        CONSTRAINT DF_Prescriptions_IssuedAt DEFAULT (SYSDATETIME())
+        CONSTRAINT DF_Prescriptions_IssuedAt DEFAULT (SYSDATETIME()),
+
+    ValidUntil DATE NULL,
+
+    Status NVARCHAR(20) NOT NULL
+        CONSTRAINT CK_Prescriptions_Status 
+        CHECK (Status IN ('Active','Cancelled','Expired')),
+
+    Notes NVARCHAR(300) NULL
 );
+
