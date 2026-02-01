@@ -1,0 +1,11 @@
+
+IF DB_ID('ClinicDB') IS NOT NULL
+    DROP DATABASE ClinicDB;
+GO
+
+
+CREATE DATABASE ClinicDB;
+GO
+
+USE ClinicDB;
+GO
