@@ -34,3 +34,25 @@ CREATE TABLE dbo.RecipeRatings (
     CreatedAt DATETIME2 NOT NULL CONSTRAINT DF_RecipeRatings_CreatedAt DEFAULT (SYSDATETIME()),
     CONSTRAINT FK_RecipeRatings_Recipes FOREIGN KEY (RecipeId) REFERENCES dbo.Recipes(RecipeId)
 );
+
+USE ClinicDB;
+GO
+
+CREATE TABLE dbo.Prescriptions (
+    PrescriptionId INT IDENTITY(1,1)
+        CONSTRAINT PK_Prescriptions PRIMARY KEY,
+
+    PatientName NVARCHAR(100) NOT NULL,
+    MedicationName NVARCHAR(120) NOT NULL,
+
+    Dosage NVARCHAR(50) NOT NULL,       -- t.ex. "1 tablett"
+    Frequency NVARCHAR(50) NOT NULL,    -- t.ex. "2 gånger per dag"
+    Days INT NOT NULL
+        CONSTRAINT CK_Prescriptions_Days CHECK (Days > 0),
+
+    Status CHAR(2) NOT NULL
+        CONSTRAINT CK_Prescriptions_Status CHECK (Status IN ('IG','G')),
+
+    IssuedAt DATETIME2 NOT NULL
+        CONSTRAINT DF_Prescriptions_IssuedAt DEFAULT (SYSDATETIME())
+);
