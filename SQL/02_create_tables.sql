@@ -38,7 +38,7 @@ CREATE TABLE Bokningar (
     StartTid DATETIME NOT NULL,
     Konummer INT NOT NULL,
     Status NVARCHAR(50)
-        CHECK (Status IN ('Bokad','Genomförd','Inställd')) NOT NULL,
+        CHECK (Status IN ('Bokad','GenomfÃ¶rd','InstÃ¤lld')) NOT NULL,
     Betyg INT
         CHECK (Betyg BETWEEN 1 AND 5 OR Betyg IS NULL),
     Skapad DATETIME NOT NULL DEFAULT GETDATE(),

@@ -10,19 +10,19 @@ INSERT INTO Patienter (FirstName, LastName, WaitingNumber, PhoneNumber, CreatedA
 GO
 
 INSERT INTO Personal (Namn, Yrke, Telefonnummer) VALUES
-('Dr. Johan Ek', 'Läkare', '0731000000'),
-('Sofia Berg', 'Sjuksköterska', '0732000000'),
+('Dr. Johan Ek', 'LÃ¤kare', '0731000000'),
+('Sofia Berg', 'SjukskÃ¶terska', '0732000000'),
 ('Eva Lind', 'Receptionist', '0733000000');
 GO
 
 
 INSERT INTO Bokningar (PatientId, PersonalId, StartTid, Konummer, Status, Betyg, Skapad) VALUES
-(1, 1, DATEADD(HOUR, -2, GETDATE()), 101, 'Genomförd', 5, GETDATE()),
-(2, 2, DATEADD(HOUR, -1, GETDATE()), 102, 'Genomförd', 4, GETDATE()),
+(1, 1, DATEADD(HOUR, -2, GETDATE()), 101, 'GenomfÃ¶rd', 5, GETDATE()),
+(2, 2, DATEADD(HOUR, -1, GETDATE()), 102, 'GenomfÃ¶rd', 4, GETDATE()),
 (3, 1, DATEADD(HOUR, 1, GETDATE()), 103, 'Bokad', NULL, GETDATE()),
 (4, 2, DATEADD(HOUR, 3, GETDATE()), 104, 'Bokad', NULL, GETDATE()),
 (5, 3, DATEADD(HOUR, 5, GETDATE()), 105, 'Bokad', NULL, GETDATE()),
-(1, 1, DATEADD(DAY, -1, GETDATE()), 106, 'Genomförd', 5, GETDATE());
+(1, 1, DATEADD(DAY, -1, GETDATE()), 106, 'GenomfÃ¶rd', 5, GETDATE());
 GO
 
 INSERT INTO Betalning (PatientId, Belopp, Betalningsdatum, Betalningssatt, Betalningsstatus) VALUES
