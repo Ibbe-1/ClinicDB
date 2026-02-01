@@ -53,4 +53,28 @@ CREATE TABLE KonummerSekven (
     Datum DATE NOT NULL,
     SistaKonummer INT NOT NULL
 );
+
+USE ClinicDB;
 GO
+
+USE ClinicDB;
+GO
+
+CREATE TABLE dbo.Prescriptions (
+    PrescriptionId INT IDENTITY(1,1)
+        CONSTRAINT PK_Prescriptions PRIMARY KEY,
+
+    PersonalId INT NOT NULL,   -- l�karen/sjuksk�terskan
+
+    IssuedAt DATETIME2 NOT NULL
+        CONSTRAINT DF_Prescriptions_IssuedAt DEFAULT (SYSDATETIME()),
+
+    ValidUntil DATE NULL,
+
+    Status NVARCHAR(20) NOT NULL
+        CONSTRAINT CK_Prescriptions_Status 
+        CHECK (Status IN ('Active','Cancelled','Expired')),
+
+    Notes NVARCHAR(300) NULL
+);
+
