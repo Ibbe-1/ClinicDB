@@ -1,36 +1,56 @@
--- Recipes
-CREATE TABLE dbo.Recipes (
-    RecipeId INT IDENTITY(1,1) CONSTRAINT PK_Recipes PRIMARY KEY,
-    Title NVARCHAR(120) NOT NULL,
-    PrepMinutes INT NOT NULL CONSTRAINT CK_Recipes_Prep CHECK (PrepMinutes >= 0),
-    CookMinutes INT NOT NULL CONSTRAINT CK_Recipes_Cook CHECK (CookMinutes >= 0),
-    Servings INT NOT NULL CONSTRAINT CK_Recipes_Servings CHECK (Servings > 0),
-    CreatedAt DATETIME2 NOT NULL CONSTRAINT DF_Recipes_CreatedAt DEFAULT (SYSDATETIME())
-);
+USE ClinicDB;
+GO
 
--- Ingredients
-CREATE TABLE dbo.Ingredients (
-    IngredientId INT IDENTITY(1,1) CONSTRAINT PK_Ingredients PRIMARY KEY,
-    Name NVARCHAR(120) NOT NULL,
-    CreatedAt DATETIME2 NOT NULL CONSTRAINT DF_Ingredients_CreatedAt DEFAULT (SYSDATETIME())
+CREATE TABLE Patienter (
+    PatientId INT IDENTITY PRIMARY KEY,
+    FirstName NVARCHAR(100) NOT NULL,
+    LastName NVARCHAR(100) NOT NULL,
+    WaitingNumber INT NOT NULL,
+    PhoneNumber NVARCHAR(20),
+    CreatedAt DATETIME
 );
+GO
 
--- M:N (koppling)
-CREATE TABLE dbo.RecipeIngredients (
-    RecipeId INT NOT NULL,
-    IngredientId INT NOT NULL,
-    Quantity DECIMAL(10,2) NOT NULL CONSTRAINT CK_RecipeIngredients_Qty CHECK (Quantity > 0),
-    Unit NVARCHAR(20) NOT NULL,
-    CONSTRAINT PK_RecipeIngredients PRIMARY KEY (RecipeId, IngredientId),
-    CONSTRAINT FK_RecipeIngredients_Recipes FOREIGN KEY (RecipeId) REFERENCES dbo.Recipes(RecipeId),
-    CONSTRAINT FK_RecipeIngredients_Ingredients FOREIGN KEY (IngredientId) REFERENCES dbo.Ingredients(IngredientId)
+CREATE TABLE Personal (
+    PersonalId INT IDENTITY PRIMARY KEY,
+    Namn NVARCHAR(100) NOT NULL,
+    Yrke NVARCHAR(50) NOT NULL,
+    Telefonnummer NVARCHAR(20)
 );
+GO
 
-CREATE TABLE dbo.RecipeRatings (
-    RatingId INT IDENTITY(1,1) CONSTRAINT PK_RecipeRatings PRIMARY KEY,
-    RecipeId INT NOT NULL,
-    Grade CHAR(2) NOT NULL CONSTRAINT CK_RecipeRatings_Grade CHECK (Grade IN ('IG','G')),
-    Comment NVARCHAR(300) NULL,
-    CreatedAt DATETIME2 NOT NULL CONSTRAINT DF_RecipeRatings_CreatedAt DEFAULT (SYSDATETIME()),
-    CONSTRAINT FK_RecipeRatings_Recipes FOREIGN KEY (RecipeId) REFERENCES dbo.Recipes(RecipeId)
+CREATE TABLE Betalning (
+    BetalningId INT IDENTITY PRIMARY KEY,
+    PatientId INT NOT NULL,
+    Belopp DECIMAL(10,2) NOT NULL,
+    Betalningsdatum DATETIME NOT NULL,
+    Betalningssatt NVARCHAR(50) NOT NULL,
+    Betalningsstatus NVARCHAR(50)
+        CHECK (Betalningsstatus IN ('Betald','Obetald')) NOT NULL,
+    FOREIGN KEY (PatientId) REFERENCES Patienter(PatientId)
 );
+GO
+
+CREATE TABLE Bokningar (
+    Id INT IDENTITY PRIMARY KEY,
+    PatientId INT NOT NULL,
+    PersonalId INT NOT NULL,
+    StartTid DATETIME NOT NULL,
+    Konummer INT NOT NULL,
+    Status NVARCHAR(50)
+        CHECK (Status IN ('Bokad','Genomförd','Inställd')) NOT NULL,
+    Betyg INT
+        CHECK (Betyg BETWEEN 1 AND 5 OR Betyg IS NULL),
+    Skapad DATETIME NOT NULL DEFAULT GETDATE(),
+    FOREIGN KEY (PatientId) REFERENCES Patienter(PatientId),
+    FOREIGN KEY (PersonalId) REFERENCES Personal(PersonalId)
+);
+GO
+
+
+CREATE TABLE KonummerSekven (
+    MottagningId INT PRIMARY KEY,
+    Datum DATE NOT NULL,
+    SistaKonummer INT NOT NULL
+);
+GO
