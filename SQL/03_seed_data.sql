@@ -1,29 +1,37 @@
-INSERT INTO dbo.Recipes (Title, PrepMinutes, CookMinutes, Servings)
-VALUES
-('Pasta', 10, 15, 2),
-('Sallad', 10, 0, 1),
-('Kycklinggryta', 15, 25, 4),
-('Tacos', 20, 10, 4),
-('Pannkakor', 10, 20, 3),
-('Fisk i ugn', 10, 25, 2),
-('Wok', 15, 10, 2),
-('Lasagne', 20, 40, 6),
-('Smoothie', 5, 0, 1),
-('Omelett', 5, 5, 1);
+USE ClinicDB;
+GO
 
-INSERT INTO dbo.Ingredients (Name)
-VALUES
-('Salt'), ('Peppar'), ('Kyckling'), ('Tomat'), ('Pasta'), ('Ost');
+INSERT INTO Patienter (FirstName, LastName, WaitingNumber, PhoneNumber, CreatedAt) VALUES
+('Anna', 'Larsson', 1, '0701111111', GETDATE()),
+('Erik', 'Svensson', 2, '0702222222', GETDATE()),
+('Maria', 'Johansson', 3, '0703333333', GETDATE()),
+('Johan', 'Karlsson', 4, '0704444444', GETDATE()),
+('Elin', 'Lindberg', 5, '0705555555', GETDATE());
+GO
 
--- Minst 25 rader h�r (exempel: koppla lite fritt)
-INSERT INTO dbo.RecipeIngredients (RecipeId, IngredientId, Quantity, Unit)
-VALUES
-(1, 5, 200, 'g'), (1, 1, 1, 'tsk'), (1, 2, 1, 'krm'),
-(2, 4, 1, 'st'), (2, 1, 1, 'krm'), (2, 2, 1, 'krm'),
-(3, 3, 400, 'g'), (3, 4, 2, 'st'), (3, 1, 1, 'tsk'),
-(4, 4, 2, 'st'), (4, 3, 300, 'g'), (4, 1, 1, 'tsk'),
-(5, 6, 50, 'g'), (5, 1, 1, 'krm'), (5, 2, 1, 'krm'),
-(6, 1, 1, 'tsk'), (6, 2, 1, 'krm'), (6, 4, 1, 'st'),
-(7, 3, 250, 'g'), (7, 1, 1, 'krm'), (7, 2, 1, 'krm'),
-(8, 6, 100, 'g'), (8, 5, 300, 'g'), (8, 4, 2, 'st'),
-(9, 4, 1, 'st');
+INSERT INTO Personal (Namn, Yrke, Telefonnummer) VALUES
+('Dr. Johan Ek', 'Läkare', '0731000000'),
+('Sofia Berg', 'Sjuksköterska', '0732000000'),
+('Eva Lind', 'Receptionist', '0733000000');
+GO
+
+
+INSERT INTO Bokningar (PatientId, PersonalId, StartTid, Konummer, Status, Betyg, Skapad) VALUES
+(1, 1, DATEADD(HOUR, -2, GETDATE()), 101, 'Genomförd', 5, GETDATE()),
+(2, 2, DATEADD(HOUR, -1, GETDATE()), 102, 'Genomförd', 4, GETDATE()),
+(3, 1, DATEADD(HOUR, 1, GETDATE()), 103, 'Bokad', NULL, GETDATE()),
+(4, 2, DATEADD(HOUR, 3, GETDATE()), 104, 'Bokad', NULL, GETDATE()),
+(5, 3, DATEADD(HOUR, 5, GETDATE()), 105, 'Bokad', NULL, GETDATE()),
+(1, 1, DATEADD(DAY, -1, GETDATE()), 106, 'Genomförd', 5, GETDATE());
+GO
+
+INSERT INTO Betalning (PatientId, Belopp, Betalningsdatum, Betalningssatt, Betalningsstatus) VALUES
+(1, 500, DATEADD(HOUR, -2, GETDATE()), 'Kort', 'Betald'),
+(2, 450, DATEADD(HOUR, -1, GETDATE()), 'Swish', 'Betald'),
+(1, 500, DATEADD(DAY, -1, GETDATE()), 'Kort', 'Betald');
+GO
+
+
+INSERT INTO KonummerSekven (MottagningId, Datum, SistaKonummer)
+VALUES (1, CAST(GETDATE() AS DATE), 200);
+GO
